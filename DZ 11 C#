@@ -1,0 +1,329 @@
+using System.Collections;
+
+namespace Classes
+{
+    class Student
+    {
+        private string lastName;
+        private string firstName;
+        private string patronymic;
+        private DateTime dateOfBirth;
+        private string homeAddress;
+        private string phoneNumber;
+        private List<int> gradesTests = new List<int>();
+        private List<int> gradesCourseworks = new List<int>();
+        private List<int> gradesExams = new List<int>();
+
+        public Student() : this("Иванов", "Иван") { }
+
+        public Student(string lastName, string firstName) : this(lastName, firstName, "", DateTime.Now, "Косая алея", "09305553344") { }
+
+        public Student(string lastName, string firstName, string patronymic, DateTime dateOfBirth, string homeAddress, string phoneNumber)
+        {
+            SetLastName(lastName);
+            SetFirstName(firstName);
+            SetPatronymic(patronymic);
+            SetDateOfBirth(dateOfBirth);
+            SetHomeAddress(homeAddress);
+            SetPhoneNumber(phoneNumber);
+            Console.WriteLine("Основной конструктор!");
+        }
+
+        public void SetLastName(string lastName)
+        {
+            this.lastName = lastName;
+        }
+
+        public void SetFirstName(string firstName)
+        {
+            this.firstName = firstName;
+        }
+
+        public void SetPatronymic(string patronymic)
+        {
+            this.patronymic = patronymic;
+        }
+
+        public void SetDateOfBirth(DateTime dateOfBirth)
+        {
+            this.dateOfBirth = dateOfBirth;
+        }
+
+        public void SetHomeAddress(string homeAddress)
+        {
+            if (!string.IsNullOrEmpty(homeAddress))
+                this.homeAddress = homeAddress;
+        }
+
+        public void SetPhoneNumber(string phoneNumber)
+        {
+            this.phoneNumber = phoneNumber;
+        }
+
+        public string GetLastName()
+        {
+            return lastName;
+        }
+
+        public string GetFirstName()
+        {
+            return firstName;
+        }
+
+        public string GetPatronymic()
+        {
+            return patronymic;
+        }
+
+        public DateTime GetDateOfBirth()
+        {
+            return dateOfBirth;
+        }
+
+        public string GetHomeAddress()
+        {
+            return homeAddress;
+        }
+
+        public string GetPhoneNumber()
+        {
+            return phoneNumber;
+        }
+
+        public List<int> GetGradesTests()
+        {
+            return gradesTests;
+        }
+
+        public List<int> GetGradesCourseworks()
+        {
+            return gradesCourseworks;
+        }
+
+        public List<int> GetGradesExams()
+        {
+            return gradesExams;
+        }
+
+        public virtual void DisplayStudentInfo()
+        {
+            Console.WriteLine("Информация о студенте:");
+            Console.WriteLine("Фамилия: " + lastName + ", Имя: " + firstName + ", Отчество: " + patronymic);
+            Console.WriteLine("Дата рождения: " + dateOfBirth.ToShortDateString());
+            Console.WriteLine("Домашний адрес: " + homeAddress);
+            Console.WriteLine("Номер телефона: " + phoneNumber);
+            Console.WriteLine("Оценки:");
+            Console.WriteLine("Тесты:");
+            foreach (int grade in gradesTests)
+            {
+                Console.Write(grade + " ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Курсовые работы:");
+            foreach (int grade in gradesCourseworks)
+            {
+                Console.Write(grade + " ");
+            }
+            Console.WriteLine();
+            Console.WriteLine("Экзамены:");
+            foreach (int grade in gradesExams)
+            {
+                Console.Write(grade + " ");
+            }
+            Console.WriteLine();
+        }
+
+        public void AddTestRate(int rate)
+        {
+            gradesTests.Add(rate);
+        }
+
+        public void AddCourseworkRate(int rate)
+        {
+            gradesCourseworks.Add(rate);
+        }
+
+        public void AddExamRate(int rate)
+        {
+            gradesExams.Add(rate);
+        }
+
+        public virtual void Study()
+        {
+            Console.WriteLine(GetFirstName() + " " + GetLastName() + " учится.");
+        }
+
+        public virtual void TakeExam()
+        {
+            Console.WriteLine(GetFirstName() + " " + GetLastName() + " сдает экзамен.");
+        }
+
+        public virtual string GetInfo()
+        {
+            return "ФИО: " + lastName + " " + firstName + " " + patronymic + ", Дата рождения: " + dateOfBirth.ToShortDateString() + ", Домашний адрес: " + homeAddress + ", Номер телефона: " + phoneNumber;
+        }
+    }
+
+    class Aspirant : Student
+    {
+        private string thesisTheme;
+
+        public Aspirant() : base()
+        {
+            thesisTheme = "Тема диссертации не указана";
+            Console.WriteLine("Базовый конструктор аспиранта!");
+        }
+
+        public Aspirant(string lastName, string firstName) : base(lastName, firstName)
+        {
+            thesisTheme = "Тема диссертации не указана";
+            Console.WriteLine("Конструктор аспиранта с параметрами имени и фамилии!");
+        }
+
+        public Aspirant(string lastName, string firstName, string patronymic, DateTime dateOfBirth, string homeAddress, string phoneNumber, string thesisTheme)
+            : base(lastName, firstName, patronymic, dateOfBirth, homeAddress, phoneNumber)
+        {
+            this.thesisTheme = thesisTheme;
+            Console.WriteLine("Основной конструктор!");
+        }
+
+        public string ThesisTheme
+        {
+            get { return thesisTheme; }
+            set { thesisTheme = value; }
+        }
+
+        public override void Study()
+        {
+            Console.WriteLine(GetFirstName() + " " + GetLastName() + " занимается учебой и исследованиями.");
+        }
+
+        public void DoInternship()
+        {
+            Console.WriteLine(GetFirstName() + " " + GetLastName() + " проходит стажировку.");
+        }
+
+        public void DefendThesis()
+        {
+            Console.WriteLine(GetFirstName() + " " + GetLastName() + " защищает диссертацию.");
+        }
+
+        public override void TakeExam()
+        {
+            Console.WriteLine(GetFirstName() + " " + GetLastName() + " сдает комплексный экзамен.");
+        }
+
+        public override string GetInfo()
+        {
+            string baseInfo = base.GetInfo();
+            return baseInfo + ", Тема диссертации: " + thesisTheme;
+        }
+    }
+
+    class Group : IEnumerable<Student>
+    {
+        private List<Student> students = new List<Student>();
+
+        // Метод для добавления студента в группу
+        public void AddStudent(Student student)
+        {
+            students.Add(student);
+        }
+
+        // Реализация интерфейса IEnumerable
+        public IEnumerator<Student> GetEnumerator()
+        {
+            return new GroupEnumerator(students);
+        }
+
+        // Реализация неявно требуемого метода из интерфейса IEnumerable
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
+    class GroupEnumerator : IEnumerator<Student>
+    {
+        private List<Student> students;
+        private int currentIndex = -1;
+
+        // Конструктор, принимающий список студентов
+        public GroupEnumerator(List<Student> students)
+        {
+            this.students = students;
+        }
+
+        // Реализация метода MoveNext() интерфейса IEnumerator
+        public bool MoveNext()
+        {
+            currentIndex++;
+            return currentIndex < students.Count;
+        }
+
+        // Реализация свойства Current интерфейса IEnumerator
+        public Student Current
+        {
+            get { return students[currentIndex]; }
+        }
+
+        // Реализация явно требуемого метода из интерфейса IEnumerator
+        object IEnumerator.Current
+        {
+            get { return Current; }
+        }
+
+        // Реализация метода Dispose() интерфейса IEnumerator
+        public void Dispose()
+        {
+            // Нет необходимости в ресурсах для освобождения, поэтому оставляем пустым
+        }
+
+        // Реализация метода Reset() интерфейса IEnumerator
+        public void Reset()
+        {
+            currentIndex = -1;
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Student a = new Student();
+            Student b = new Student("Andrew", "Rossi");
+            Student c = new Student("Ivanov", "Ivan", "Ivanovich", new DateTime(1977, 5, 25), "Kosalea", "123456789");
+            c.AddTestRate(4);
+            c.AddCourseworkRate(5);
+            c.AddExamRate(3);
+            Console.WriteLine("Student:");
+            c.DisplayStudentInfo();
+
+            Console.WriteLine();
+
+            Aspirant d = new Aspirant("Petrov", "Petr", "Petrovich", new DateTime(1980, 10, 15), "Arnaytskay street", "987654321", "Quantum Physics");
+            d.AddTestRate(5);
+            d.AddCourseworkRate(4);
+            d.AddExamRate(5);
+            d.DoInternship();
+            d.DefendThesis();
+            Console.WriteLine("Aspirant:");
+            d.DisplayStudentInfo();
+
+            // Создаем объект группы и добавляем в нее студентов и аспирантов
+            Group group = new Group();
+            group.AddStudent(a);
+            group.AddStudent(b);
+            group.AddStudent(c);
+            group.AddStudent(d);
+
+            // Используем foreach для перебора студентов в группе
+            Console.WriteLine();
+            Console.WriteLine("Перебор студентов в группе с использованием foreach:");
+            foreach (Student student in group)
+            {
+                Console.WriteLine(student.GetLastName() + ", " + student.GetFirstName());
+            }
+        }
+    }
+}
